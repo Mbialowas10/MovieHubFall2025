@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.mbialowas.moviehubfall2025.ui.theme.MovieHubFall2025Theme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +21,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             MovieHubFall2025Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    // initialization
+                    val navController = rememberNavController()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MovieHubFall2025Theme {
-        Greeting("Android")
-    }
-}
