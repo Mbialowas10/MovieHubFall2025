@@ -55,8 +55,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(paddingValues)
                     ) {
                         composable(Destination.Movie.route) {
-                            //MovieScreen()
-                            Counter(viewModel)
+                            MovieScreen()
+
 
                         }
                         composable(Destination.Search.route) {
