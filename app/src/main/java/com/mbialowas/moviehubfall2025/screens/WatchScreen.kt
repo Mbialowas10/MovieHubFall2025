@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun WatchService(modifier: Modifier = Modifier){
+fun WatchScreen(modifier: Modifier = Modifier){
     Box(
         modifier
             .fillMaxSize()
