@@ -15,15 +15,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mbialowas.moviehubfall2025.Navigation.BottomNav
 import com.mbialowas.moviehubfall2025.destinations.Destination
+import com.mbialowas.moviehubfall2025.screens.Counter
 import com.mbialowas.moviehubfall2025.screens.MovieScreen
 import com.mbialowas.moviehubfall2025.screens.SearchScreen
 import com.mbialowas.moviehubfall2025.screens.WatchScreen
 import com.mbialowas.moviehubfall2025.ui.theme.MovieHubFall2025Theme
+import com.mbialowas.moviehubfall2025.vm.AppViewModel
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -33,6 +36,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MovieHubFall2025Theme {
                 val navController = rememberNavController()
+                val viewModel: AppViewModel = ViewModelProvider(this)[AppViewModel::class.java]
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -51,7 +55,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(paddingValues)
                     ) {
                         composable(Destination.Movie.route) {
-                            MovieScreen()
+                            //MovieScreen()
+                            Counter(viewModel)
 
                         }
                         composable(Destination.Search.route) {
