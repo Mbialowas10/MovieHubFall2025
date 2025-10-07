@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.core.os.BuildCompat
+import com.mbialowas.moviehubfall2025.BuildConfig
 import com.mbialowas.moviehubfall2025.api.model.Movie
 import com.mbialowas.moviehubfall2025.api.model.MovieData
 import retrofit2.Call
@@ -12,7 +14,8 @@ import retrofit2.Response
 
 class MovieManager{
     private var _moviesResponse= mutableStateOf<List<Movie>>(emptyList())
-    val api_key="23ddbf51b97364a6da401d3a7ce6f4ed"
+    //val api_key="23ddbf51b97364a6da401d3a7ce6f4ed" # don't do this!
+    val api_key = BuildConfig.TMDB_API_KEY
 
     val moviesResponse: MutableState<List<Movie>>
         @Composable get() = remember {

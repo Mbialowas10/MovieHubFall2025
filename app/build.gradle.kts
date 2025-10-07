@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +12,17 @@ android {
     compileSdk = 36
 
     defaultConfig {
+
+        // Load TMDB_API_KEY from local.properties
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()){
+           localProperties.load(FileInputStream(localPropertiesFile))
+        }
+        val tmdbApiKey = localProperties.getProperty("TMDB_API_KEY") ?: ""
+        buildConfigField("String", "TMDB_API_KEY","\"$tmdbApiKey\"")
+
+
         applicationId = "com.mbialowas.moviehubfall2025"
         minSdk = 24
         targetSdk = 36
@@ -36,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig=true
     }
 }
 
