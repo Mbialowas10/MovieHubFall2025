@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mbialowas.moviehubfall2025.Navigation.BottomNav
+import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.destinations.Destination
 import com.mbialowas.moviehubfall2025.screens.Counter
 import com.mbialowas.moviehubfall2025.screens.MovieScreen
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
             MovieHubFall2025Theme {
                 val navController = rememberNavController()
                 val viewModel: AppViewModel = ViewModelProvider(this)[AppViewModel::class.java]
+                val movieManager = MovieManager()
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -55,7 +57,9 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(paddingValues)
                     ) {
                         composable(Destination.Movie.route) {
-                            MovieScreen()
+                            MovieScreen(
+                                movieManager = movieManager
+                            )
 
 
                         }

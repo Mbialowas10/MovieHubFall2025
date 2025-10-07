@@ -9,6 +9,7 @@ object Api {
 
     private val BASE_URL = "https://api.themoviedb.org/3/"
 
+
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
@@ -18,6 +19,8 @@ object Api {
         .baseUrl(BASE_URL)
         .build()
 
-//val retrofitService: MovieService by l
+    val retrofitService: MovieService by lazy {
+        retrofit.create(MovieService::class.java)
+    }
 
 }

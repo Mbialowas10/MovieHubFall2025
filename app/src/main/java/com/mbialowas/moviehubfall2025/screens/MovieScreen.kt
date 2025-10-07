@@ -11,9 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.mbialowas.moviehubfall2025.api.MovieManager
+import com.mbialowas.moviehubfall2025.api.MovieService
 
 @Composable
-fun MovieScreen(modifier: Modifier =  Modifier){
+fun MovieScreen(modifier: Modifier =  Modifier, movieManager: MovieManager){
     Box(
         modifier
             .fillMaxSize()
