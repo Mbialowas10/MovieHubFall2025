@@ -58,7 +58,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Destination.Movie.route) {
                             MovieScreen(
-                                movieManager = movieManager
+
+                                movieManager = movieManager,
+                                navController = navController,
                             )
 
 
