@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,59 +32,68 @@ import com.mbialowas.moviehubfall2025.api.model.Movie
 
 @Composable
 fun MovieScreen(
-    modifier: Modifier =  Modifier,
+    navController: NavController,
+    modifier: Modifier,
     movieManager: MovieManager,
-    navController: NavController
-){
+    //db:AppDatabase
+) {
     Box(
-        modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Blue)
-    ){
-        Text(
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.align (Alignment.Center),
-            text="Movie Screen"
-        )
+    ) {
+
+
+
+
+
+
+
         val movies = movieManager.moviesResponse.value
         LazyColumn {
-            items(movies) {movie->
-                MovieCard(movieItem=movie, navController=navController,modifier)
+            items(movies) { movie ->
+                MovieCard(movieItem = movie, navController = navController, movieManager)
                 Log.i("HTTP:", "https://image.tmdb.org/t/p/w500${movie.posterPath}")
             }
         }
     }
 }
+
 @Composable
 fun MovieCard(
     movieItem: Movie,
     navController: NavController,
-    modifier: Modifier
-){
+    //db: AppDatabase,
+    moviesManager: MovieManager
+) {
+
     Column(
-        modifier = modifier
-            .border(1.dp,Color.Red, shape= RoundedCornerShape(10.dp))
-            .fillMaxSize()
+        modifier = Modifier
+            .border(1.dp, Color.Red, shape = RoundedCornerShape(10.dp))
+
             .padding(5.dp)
-            .clickable{
+            .fillMaxWidth()
+            .clickable {
                 navController.navigate("movieDetail/${movieItem.id}")
             }
     ){
         Row(
-             modifier = modifier
-                 .background((Color.DarkGray))
-                 .fillMaxSize()
-                 .padding(5.dp)
+            modifier = Modifier
+                .background(color = Color.DarkGray)
+                .fillMaxWidth()
+                .padding(5.dp)
         ){
             AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 model = ImageRequest.Builder(
                     LocalContext.current
-                ).data("https://image.tmdb.org/t/p/w500${movieItem.posterPath}")
+                ).data("https://image.tmdb.org/t/p/w500/${movieItem.posterPath}")
                     .build(),
-                contentDescription = movieItem.overview
+                contentDescription = movieItem.overview,
+                contentScale = ContentScale.FillWidth
             )
         }
     }
-}
+
+} // END MovieCard
