@@ -49,8 +49,9 @@ class MainActivity : ComponentActivity() {
             MovieHubFall2025Theme {
                 val navController = rememberNavController()
                 val viewModel: AppViewModel = ViewModelProvider(this)[AppViewModel::class.java]
-                val movieManager = MovieManager()
                 val db = AppDatabase.getInstance(applicationContext)
+                val movieManager = MovieManager(db)
+
                 Scaffold(
                     topBar = {
                         TopAppBar(
