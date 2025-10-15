@@ -42,9 +42,9 @@ import com.mbialowas.moviehubfall2025.api.model.Movie
 
 
 @Composable
-fun MovieDetailScreen(modifier: Modifier, movie: Movie){
+fun MovieDetailScreen( movie: Movie){
     Box(
-        modifier
+        modifier = Modifier
             .background(Color.Black)
             .fillMaxSize()
     ){

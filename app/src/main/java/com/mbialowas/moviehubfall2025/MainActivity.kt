@@ -1,5 +1,6 @@
 package com.mbialowas.moviehubfall2025
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -41,6 +42,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +103,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             movie?.let{
-                                MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie = movie!!)
+                                MovieDetailScreen(movie = movie!!)
                             }
 
                         }
