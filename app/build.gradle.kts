@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.devtoolsKsp)
 }
 
 android {
@@ -55,6 +56,13 @@ android {
 }
 
 dependencies {
+
+    // room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.common)
+    ksp(libs.androidx.room.compiler)
+
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
