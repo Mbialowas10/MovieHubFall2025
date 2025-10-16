@@ -29,6 +29,7 @@ import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.api.model.Movie
 import com.mbialowas.moviehubfall2025.destinations.Destination
 import com.mbialowas.moviehubfall2025.screens.Counter
+import com.mbialowas.moviehubfall2025.screens.MovieDetailScreen
 import com.mbialowas.moviehubfall2025.screens.MovieScreen
 import com.mbialowas.moviehubfall2025.screens.SearchScreen
 import com.mbialowas.moviehubfall2025.screens.WatchScreen
@@ -81,13 +82,14 @@ class MainActivity : ComponentActivity() {
                             var movie by remember {
                                 mutableStateOf<Movie?>(null)
                             }
-                            val movie_id:String?  = navBackStackEntry.arguments?.getString("movieID")
+                            //val movie_id:String?  = navBackStackEntry.arguments?.getString("movieID")
 
-                            Log.i("MJB", movie_id.toString() )
-//                            MovieDetailScreen(
-//                                modifier = Modifier,
-//                                movie = m
-//                            )
+                            //Log.i("MJB", movie_id.toString() )
+                            val m = Movie(title="The Matrix", overview="A tragic story of a computer hacker gone bad.", posterPath = "https://media.themoviedb.org/t/p/w600_and_h900_bestv2/2LzFTywrUE3EY45fIhYQskiyshl.jpg")
+                          MovieDetailScreen(
+                                modifier = Modifier,
+                                movie = m
+                            )
 
                         }
                     }
