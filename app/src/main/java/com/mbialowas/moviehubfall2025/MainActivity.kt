@@ -30,6 +30,7 @@ import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.api.model.Movie
 import com.mbialowas.moviehubfall2025.db.AppDatabase
 import com.mbialowas.moviehubfall2025.destinations.Destination
+import com.mbialowas.moviehubfall2025.mvvm.MovieViewModel
 import com.mbialowas.moviehubfall2025.screens.Counter
 import com.mbialowas.moviehubfall2025.screens.MovieDetailScreen
 import com.mbialowas.moviehubfall2025.screens.MovieScreen
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MovieHubFall2025Theme {
                 val navController = rememberNavController()
-                val viewModel: AppViewModel = ViewModelProvider(this)[AppViewModel::class.java]
+                val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
                 val db = AppDatabase.getInstance(applicationContext)
                 val movieManager = MovieManager(db)
 
@@ -103,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             movie?.let{
-                                MovieDetailScreen(movie = movie!!)
+                                MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager,viewModel)
                             }
 
                         }

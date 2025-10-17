@@ -19,9 +19,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,15 +36,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.mbialowas.moviehubfall2025.api.MovieManager
+import com.mbialowas.moviehubfall2025.db.AppDatabase
 import com.mbialowas.moviehubfall2025.api.model.Movie
+import com.mbialowas.moviehubfall2025.destinations.Destination
+import com.mbialowas.moviehubfall2025.mvvm.MovieViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun MovieDetailScreen( movie: Movie){
+fun MovieDetailScreen(
+    modifier: Modifier, movie: Movie,
+    db: AppDatabase,
+    navController: NavController,
+    movieManager: MovieManager,
+    viewModel: MovieViewModel
+){
     Box(
-        modifier = Modifier
+        modifier
             .background(Color.Black)
             .fillMaxSize()
     ){
@@ -53,7 +67,10 @@ fun MovieDetailScreen( movie: Movie){
         Log.i("MovieDetailScreen","${movie.posterPath}")
 
         // state level variable to track movie favourite state
-        var isIconChanged by remember { mutableStateOf(false) }
+        val iconState by viewModel.movieIconState.collectAsState()
+        var isIconChanged = iconState[movie.id] == true
+        var showEditDialog by remember { mutableStateOf(false) }
+        var showDeleteDialog by  remember { mutableStateOf(false) }
 
         Column{
             Text(
@@ -84,7 +101,11 @@ fun MovieDetailScreen( movie: Movie){
                     contentScale = ContentScale.FillBounds
                 )
                 IconButton(
-                    onClick = { isIconChanged = !isIconChanged},
+                    onClick = {
+                        isIconChanged = !isIconChanged
+                        // update movie state inside the view model
+                        viewModel.updateMovieIconState(movie.id!!,db)
+                    },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
@@ -104,14 +125,62 @@ fun MovieDetailScreen( movie: Movie){
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ){
                     Button(
-                        onClick = {}
+                        onClick = {
+                            showEditDialog = true
+                        }
                     ) {
                         Text("Edit")
                     }
                     Button(
-                        onClick = {}
+                        onClick = {
+                            showDeleteDialog =true
+                        }
                     ) {
                         Text("Delete")
+                    }
+                    // show Dialogs
+                    if (showDeleteDialog){
+                        DeleteMovieDialog(
+                            movie = movie,
+                            onDismiss = {showDeleteDialog = false},
+                            onConfirmDelete = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    // call our Movie dao
+                                    db.movieDao().delete(movie)
+                                    Log.i("MJB", "Past delete BP!")
+
+                                    //navController.navigate(Destination.Movie.route)
+                                    // navigation must take place on mainThread not a background
+                                    // running thread aka coroutine.
+                                    // refresh the movie screen
+                                    movieManager.refreshMovies()
+
+                                }
+                                showDeleteDialog = false
+                                navController.navigate(Destination.Movie.route)
+                            }
+                        )
+                    } // end DeleteDialog
+                    if (showEditDialog){
+                        EditMovieDialog(
+                            movie = movie,
+                            onDismiss = { showEditDialog = false },
+                            onConfirmEdit =  {newTitle, newDescription ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    movie.id?.let{movie->
+                                        // update movie in database
+                                        db.movieDao().updateMovie(movie,newTitle,newDescription)
+                                        Log.i("MJB", "Past edit BP!")
+                                        movieManager.refreshMovies()
+                                    }
+                                }
+                                showEditDialog = false
+                                navController.navigate(Destination.Movie.route)
+
+                            }
+
+
+                        )
                     }
                 } // end of Edit/Delete row
 

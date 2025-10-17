@@ -16,6 +16,7 @@ converterMoshi = "2.9.0"
 
 ksp="2.1.0-1.0.29"
 room= "2.6.1"
+material3 = "1.4.0"
 
 
 [libraries]
@@ -45,6 +46,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-common = { module = "androidx.room:room-common", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
