@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             movie?.let{
-                                MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager,viewModel)
+                                MovieDetailScreen(modifier = Modifier, movie=movie!!,db,navController,movieManager,viewModel)
                             }
 
                         }
