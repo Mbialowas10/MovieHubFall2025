@@ -2,6 +2,8 @@ package com.mbialowas.moviehubfall2025.api.model
 
 
 import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -14,11 +16,14 @@ data class Movie(
     @Json(name = "backdrop_path")
     var backdropPath: String = "",
 
-    @Json(name = "genre_ids")
-    var genreIds: List<Int> = emptyList(),
+//    @Json(name = "genre_ids")
+//    var genreIds: List<Int> = emptyList(),
 
+
+    @PrimaryKey
     @Json(name = "id")
     var id: Int = 0,
+
 
     @Json(name = "media_type")
     var mediaType: String = "",

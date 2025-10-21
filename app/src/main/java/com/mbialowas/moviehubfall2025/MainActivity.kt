@@ -1,5 +1,6 @@
 package com.mbialowas.moviehubfall2025
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -27,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mbialowas.moviehubfall2025.Navigation.BottomNav
 import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.api.model.Movie
+import com.mbialowas.moviehubfall2025.db.AppDatabase
 import com.mbialowas.moviehubfall2025.destinations.Destination
 import com.mbialowas.moviehubfall2025.screens.Counter
 import com.mbialowas.moviehubfall2025.screens.MovieDetailScreen
@@ -35,8 +37,11 @@ import com.mbialowas.moviehubfall2025.screens.SearchScreen
 import com.mbialowas.moviehubfall2025.screens.WatchScreen
 import com.mbialowas.moviehubfall2025.ui.theme.MovieHubFall2025Theme
 import com.mbialowas.moviehubfall2025.vm.AppViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +50,8 @@ class MainActivity : ComponentActivity() {
             MovieHubFall2025Theme {
                 val navController = rememberNavController()
                 val viewModel: AppViewModel = ViewModelProvider(this)[AppViewModel::class.java]
-                val movieManager = MovieManager()
+                val db = AppDatabase.getInstance(applicationContext)
+                val movieManager = MovieManager(db)
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -82,15 +88,17 @@ class MainActivity : ComponentActivity() {
                             var movie by remember {
                                 mutableStateOf<Movie?>(null)
                             }
-                            //val movie_id:String?  = navBackStackEntry.arguments?.getString("movieID")
+                            val movie_id:String?  = navBackStackEntry.arguments?.getString("movieID")
 
                             //Log.i("MJB", movie_id.toString() )
-                            val m = Movie(title="The Matrix", overview="A tragic story of a computer hacker gone bad.", posterPath = "https://media.themoviedb.org/t/p/w600_and_h900_bestv2/2LzFTywrUE3EY45fIhYQskiyshl.jpg")
-                          MovieDetailScreen(
-                                modifier = Modifier,
-                                movie = m
-                            )
-
+                            GlobalScope.launch {
+                                if (movie_id != null ){
+                                    movie = db.movieDoa().getMovieById(movie_id.toInt())
+                                }
+                            }
+                            movie?.let{
+                                MovieDetailScreen(modifier = Modifier, movie=movie!!)
+                            }
                         }
                     }
                 }
