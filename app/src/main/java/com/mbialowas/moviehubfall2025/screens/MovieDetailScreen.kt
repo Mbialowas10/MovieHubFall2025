@@ -19,9 +19,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
+
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,12 +37,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.api.model.Movie
+import com.mbialowas.moviehubfall2025.db.AppDatabase
+import com.mbialowas.moviehubfall2025.mvvm.MovieViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @Composable
-fun MovieDetailScreen(modifier: Modifier, movie: Movie){
+fun MovieDetailScreen(
+    modifier: Modifier,
+    movie: Movie,
+    movieManager: MovieManager,
+    db: AppDatabase,
+    viewModel: MovieViewModel
+){
     Box(
         modifier
             .background(Color.Black)
@@ -52,7 +68,11 @@ fun MovieDetailScreen(modifier: Modifier, movie: Movie){
         Log.i("MovieDetailScreen","${movie.posterPath}")
 
         // state level variable to track movie favourite state
-        var isIconChanged by remember { mutableStateOf(false) }
+        val iconState by viewModel.movieIconState.collectAsState()
+        var isIconChanged = iconState[movie.id] == true
+        var showEditDialog by remember {mutableStateOf(false)}
+        var showDeleteDialog by remember { mutableStateOf(false) }
+
 
         Column{
             Text(
@@ -108,10 +128,35 @@ fun MovieDetailScreen(modifier: Modifier, movie: Movie){
                         Text("Edit")
                     }
                     Button(
-                        onClick = {}
+                        onClick = {
+
+                            isIconChanged = !isIconChanged
+                            Log.i("DELETE ACTION:", isIconChanged.toString())
+                            // update movie state inside the viewModel
+                            showDeleteDialog= true
+                            viewModel.updateMovieIconState(movie.id,db)
+
+                        }
                     ) {
                         Text("Delete")
                     }
+                    //show dialogs
+                    if (showDeleteDialog){
+                        DeleteMovieDialog(
+                            movie = movie,
+                            onDismiss = { showDeleteDialog = false},
+                            onConfirmDelete = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    // call our movie doa
+                                    db.movieDao().delete(movie)
+                                    Log.i("MJB", "Past delete BP!")
+                                    movieManager.refreshMovies()
+                                }
+                                showDeleteDialog = false
+
+                            }
+                        )
+                    } // end DeleteDialog
                 } // end of Edit/Delete row
 
             } // end of the image box

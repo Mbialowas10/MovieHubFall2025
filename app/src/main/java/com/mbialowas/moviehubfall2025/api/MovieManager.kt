@@ -22,6 +22,7 @@ class MovieManager(
     private var _moviesResponse= mutableStateOf<List<Movie>>(emptyList())
     //val api_key="23ddbf51b97364a6da401d3a7ce6f4ed" # don't do this!
     val api_key = BuildConfig.TMDB_API_KEY
+    private val database = database
 
     val moviesResponse: MutableState<List<Movie>>
         @Composable get() = remember {
@@ -34,7 +35,8 @@ class MovieManager(
         database: AppDatabase
     ){
         val service = Api.retrofitService.getTrendingMovies(api_key)
-        
+
+
         service.enqueue(object : retrofit2.Callback<MovieData> {
             override fun onResponse(
                 call: Call<MovieData?>,
@@ -54,7 +56,7 @@ class MovieManager(
                 database: AppDatabase,
                 movies: List<Movie>
             ){
-                database.movieDoa().insertAllMovies(movies)
+                database.movieDao().insertAllMovies(movies)
             }
 
             override fun onFailure(
@@ -65,6 +67,10 @@ class MovieManager(
             }
 
         })
+    }
+    suspend fun  refreshMovies(){
+        var movies = database.movieDao().getAllMovies()
+        _moviesResponse.value = movies
     }
 }
 

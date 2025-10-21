@@ -1,9 +1,11 @@
 package com.mbialowas.moviehubfall2025.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.mbialowas.moviehubfall2025.api.model.Movie
 
 @Dao
@@ -17,4 +19,14 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE id = :id")
     fun getMovieById(id:Int):Movie?
 
+    @Update
+    fun updateMovieState(movie:Movie)
+    // UPDATE movies set isFavourite = new value boolean
+
+    @Delete
+    suspend fun delete(movie:Movie)
+    // DELETE from movies where movieId = {MovieId}
+
+    @Query("SELECT * FROM Movies")
+    fun getAllMovies() : List<Movie>
 }
