@@ -16,12 +16,16 @@ interface MovieDao {
     // INSERT INTO MOVIES (SELECT * FROM API)
     // INSERT INTO Movies VALUES(a,b,c)
 
+    // purpose here is to get movie detail infroomation for detail page
     @Query("SELECT * FROM movies WHERE id = :id")
     fun getMovieById(id:Int):Movie?
 
     @Update
     fun updateMovieState(movie:Movie)
     // UPDATE movies set isFavourite = new value boolean
+
+    @Query("UPDATE movies SET title= :title, overview=:overview WHERE id = :id")
+    fun updateMovie(id: Int, title:String, overview:String)
 
     @Delete
     suspend fun delete(movie:Movie)

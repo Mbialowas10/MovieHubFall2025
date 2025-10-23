@@ -103,7 +103,8 @@ class MainActivity : ComponentActivity() {
                                     movie = movie!!,
                                     db = db,
                                     viewModel=viewModel,
-                                    movieManager = movieManager
+                                    movieManager = movieManager,
+                                    navController = navController
 
                                 )
                             }

@@ -44,6 +44,7 @@ import coil3.request.ImageRequest
 import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.api.model.Movie
 import com.mbialowas.moviehubfall2025.db.AppDatabase
+import com.mbialowas.moviehubfall2025.destinations.Destination
 import com.mbialowas.moviehubfall2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +57,9 @@ fun MovieDetailScreen(
     movie: Movie,
     movieManager: MovieManager,
     db: AppDatabase,
-    viewModel: MovieViewModel
+    viewModel: MovieViewModel,
+    navController: NavController
+
 ){
     Box(
         modifier
@@ -66,6 +69,7 @@ fun MovieDetailScreen(
         Log.i("MovieDetailScreen","${movie.title}")
         Log.i("MovieDetailScreen","${movie.overview}")
         Log.i("MovieDetailScreen","${movie.posterPath}")
+
 
         // state level variable to track movie favourite state
         val iconState by viewModel.movieIconState.collectAsState()
@@ -103,7 +107,12 @@ fun MovieDetailScreen(
                     contentScale = ContentScale.FillBounds
                 )
                 IconButton(
-                    onClick = { isIconChanged = !isIconChanged},
+                    onClick = {
+                        isIconChanged = !isIconChanged
+                        // update movie state inside the view model
+                        viewModel.updateMovieIconState(movie.id,db)
+                              },
+
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
@@ -123,19 +132,15 @@ fun MovieDetailScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ){
                     Button(
-                        onClick = {}
+                        onClick = {
+                            showEditDialog = true
+                        }
                     ) {
                         Text("Edit")
                     }
                     Button(
                         onClick = {
-
-                            isIconChanged = !isIconChanged
-                            Log.i("DELETE ACTION:", isIconChanged.toString())
-                            // update movie state inside the viewModel
                             showDeleteDialog= true
-                            viewModel.updateMovieIconState(movie.id,db)
-
                         }
                     ) {
                         Text("Delete")
@@ -153,10 +158,31 @@ fun MovieDetailScreen(
                                     movieManager.refreshMovies()
                                 }
                                 showDeleteDialog = false
+                                navController.navigate(Destination.Movie.route)
+
 
                             }
                         )
                     } // end DeleteDialog
+                    if (showEditDialog){
+                        EditMovieDialog(
+                            movie = movie,
+                            onDismiss = { showEditDialog = false },
+                            onConfirmEdit = {newTitle,newDescription ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    movie.id?.let{movie->
+                                        // update in the database
+                                        db.movieDao().updateMovie(movie,newTitle,newDescription)
+                                        Log.i("MJB", "Past edit BP!")
+                                        movieManager.refreshMovies()
+                                    }
+                                }
+                                showEditDialog = false
+                                navController.navigate(Destination.Movie.route)
+
+                            }
+                        )
+                    }
                 } // end of Edit/Delete row
 
             } // end of the image box
