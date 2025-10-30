@@ -79,7 +79,7 @@ fun MovieDetailScreen(
 
         // state level variable to track movie favourite state
         val iconState by viewModel.movieIconState.collectAsState()
-        var isIconChanged = iconState[movie.id] ?: false
+        var isIconChanged by remember { mutableStateOf(iconState[movie.id] ?: false) }
         var showEditDialog by remember {mutableStateOf(false)}
         var showDeleteDialog by remember { mutableStateOf(false) }
         var lastInsertedDocument: DocumentReference? by remember {mutableStateOf <DocumentReference?> (null)}
