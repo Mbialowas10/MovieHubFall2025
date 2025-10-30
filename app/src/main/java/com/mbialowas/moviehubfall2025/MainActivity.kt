@@ -84,7 +84,13 @@ class MainActivity : ComponentActivity() {
 
                         }
                         composable(Destination.Search.route) {
-                            SearchScreen()
+                            SearchScreen(
+                                modifier = Modifier,
+                                viewModel = viewModel,
+                                database = db,
+                                navController = navController,
+                                movieManager = movieManager
+                            )
                         }
                         composable(Destination.Watch.route) {
                             WatchScreen()

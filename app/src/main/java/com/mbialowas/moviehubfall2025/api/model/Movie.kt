@@ -14,7 +14,7 @@ data class Movie(
     var adult: Boolean = false,
 
     @Json(name = "backdrop_path")
-    var backdropPath: String = "",
+    var backdropPath: String? = "",
 
 //    @Json(name = "genre_ids")
 //    var genreIds: List<Int> = emptyList(),
@@ -26,37 +26,37 @@ data class Movie(
 
 
     @Json(name = "media_type")
-    var mediaType: String = "",
+    var mediaType: String? = "",
 
     @Json(name = "original_language")
-    var originalLanguage: String = "",
+    var originalLanguage: String? = "",
 
     @Json(name = "original_title")
-    var originalTitle: String = "",
+    var originalTitle: String? = "",
 
     @Json(name = "overview")
-    var overview: String = "Default Overview",
+    var overview: String? = "Default Overview",
 
     @Json(name = "popularity")
-    var popularity: Double = 0.0,
+    var popularity: Double? = 0.0,
 
     @Json(name = "poster_path")
-    var posterPath: String = "Default Poster Path",
+    var posterPath: String? = "Default Poster Path",
 
     @Json(name = "release_date")
-    var releaseDate: String = "",
+    var releaseDate: String? = "",
 
     @Json(name = "title")
-    var title: String = "Default title",
+    var title: String? = "Default title",
 
     @Json(name = "video")
-    var video: Boolean = false,
+    var video: Boolean? = false,
 
     @Json(name = "vote_average")
-    var voteAverage: Double = 0.0,
+    var voteAverage: Double? = 0.0,
 
     @Json(name = "vote_count")
-    var voteCount: Int = 0,
+    var voteCount: Int? = 0,
 
     var isFavourite: Boolean = false
 )
