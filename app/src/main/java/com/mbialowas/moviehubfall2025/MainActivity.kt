@@ -25,6 +25,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.mbialowas.moviehubfall2025.Navigation.BottomNav
 import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.api.model.Movie
@@ -53,6 +55,8 @@ class MainActivity : ComponentActivity() {
                 val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
                 val db = AppDatabase.getInstance(applicationContext)
                 val movieManager = MovieManager(db)
+                // initialize the fb db
+                val fs_db = Firebase.firestore
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -99,12 +103,14 @@ class MainActivity : ComponentActivity() {
                             }
                             movie?.let{
                                 MovieDetailScreen(
+                                    fs_db = fs_db,
                                     modifier = Modifier,
                                     movie = movie!!,
                                     db = db,
                                     viewModel=viewModel,
                                     movieManager = movieManager,
                                     navController = navController
+
 
                                 )
                             }
