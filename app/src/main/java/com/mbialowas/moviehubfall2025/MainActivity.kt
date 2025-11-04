@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -79,6 +80,8 @@ class MainActivity : ComponentActivity() {
 
                                 movieManager = movieManager,
                                 navController = navController,
+                                modifier = Modifier,
+                                database = db,
                             )
 
 
@@ -93,7 +96,13 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Destination.Watch.route) {
-                            WatchScreen()
+                            WatchScreen(
+                                modifier = Modifier,
+                                db = db,
+                                movieManager= movieManager,
+                                navController= navController
+
+                            )
                         }
                         composable(Destination.MovieDetail.route){navBackStackEntry->
                             var movie by remember {

@@ -127,7 +127,9 @@ fun SearchScreen(
                 items(viewModel.movies.value){ movie ->
                     MovieCard(
                         movie, navController,
-                        modifier = modifier
+                        modifier = modifier,
+                        movieManager = movieManager,
+                        database = database
                     )
                 }
 

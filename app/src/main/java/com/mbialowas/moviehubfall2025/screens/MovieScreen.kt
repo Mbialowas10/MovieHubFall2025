@@ -26,12 +26,14 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.mbialowas.moviehubfall2025.api.MovieManager
 import com.mbialowas.moviehubfall2025.api.model.Movie
+import com.mbialowas.moviehubfall2025.db.AppDatabase
 
 
 @Composable
 fun MovieScreen(
     modifier: Modifier =  Modifier,
     movieManager: MovieManager,
+    database: AppDatabase,
     navController: NavController
 ){
     Box(
@@ -49,7 +51,13 @@ fun MovieScreen(
         val movies = movieManager.moviesResponse.value
         LazyColumn {
             items(movies) {movie->
-                MovieCard(movieItem=movie, navController=navController,modifier)
+                MovieCard(
+                    movieItem = movie,
+                    navController = navController,
+                    modifier = modifier,
+                    movieManager = movieManager,
+                    database = database,
+                )
                 Log.i("HTTP:", "https://image.tmdb.org/t/p/w500${movie.posterPath}")
             }
         }
@@ -59,11 +67,13 @@ fun MovieScreen(
 fun MovieCard(
     movieItem: Movie,
     navController: NavController,
-    modifier: Modifier
+    modifier: Modifier,
+    database: AppDatabase,
+    movieManager: MovieManager
 ){
     Column(
         modifier = modifier
-            .border(1.dp,Color.Red, shape= RoundedCornerShape(10.dp))
+            .border(1.dp, Color.Red, shape= RoundedCornerShape(10.dp))
             .fillMaxSize()
             .padding(5.dp)
             .clickable{
