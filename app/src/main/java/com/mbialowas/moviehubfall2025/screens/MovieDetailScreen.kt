@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -79,7 +80,8 @@ fun MovieDetailScreen(
 
         // state level variable to track movie favourite state
         val iconState by viewModel.movieIconState.collectAsState()
-        var isIconChanged = iconState[movie.id] ?: false
+        val isIconChanged = iconState[movie.id] ?: movie.isFavourite
+
         var showEditDialog by remember {mutableStateOf(false)}
         var showDeleteDialog by remember { mutableStateOf(false) }
         var lastInsertedDocument: DocumentReference? by remember {mutableStateOf <DocumentReference?> (null)}
@@ -115,7 +117,6 @@ fun MovieDetailScreen(
                 )
                 IconButton(
                     onClick = {
-                        isIconChanged = !isIconChanged
                         // update movie state inside the view model
                         viewModel.updateMovieIconState(movie.id,db)
 
@@ -134,11 +135,11 @@ fun MovieDetailScreen(
                             "movie_vote_count" to "${movie.voteCount}",
                             "movie_is_favourite" to "${movie.isFavourite}"
                         )
-                        GlobalScope.launch {
+                        viewModel.viewModelScope.launch(Dispatchers.IO) {
                             movieExists = doesMovieExist(movie.id.toString(), collection)
 
                             // add new movie to movies collection
-                            if (movieExists == false){
+                            if (movieExists == false && !isIconChanged){
                                 fs_db.collection("movies").add(m)
                                     .addOnSuccessListener { documentReference ->
                                         lastInsertedDocument = documentReference
@@ -150,7 +151,7 @@ fun MovieDetailScreen(
                                     .addOnFailureListener { e->
                                         Log.w("FS", "Error adding document", e)
                                     } // end addOnFailureListener
-                            }else if(movieExists == true){
+                            }else if(movieExists == true && isIconChanged){
                                 lastInsertedDocument?.delete()
                                     ?.addOnSuccessListener {
                                         Log.i("Removal", "${movie.title} removed from the firestore db")

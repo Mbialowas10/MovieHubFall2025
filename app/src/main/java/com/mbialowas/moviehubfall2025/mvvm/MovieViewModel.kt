@@ -78,9 +78,12 @@ class MovieViewModel : ViewModel(){
                 launch(Dispatchers.IO){
                     database.movieDao().updateMovieState(movie)
 
-                    _movieIconState.value.toMutableMap().apply{
-                        this[movieId] = movie.isFavourite
-                    }
+                    // Update farvourite state
+                    val updatedMap = _movieIconState.value.toMutableMap()
+                    updatedMap[movieId] = movie.isFavourite
+                    _movieIconState.value = updatedMap
+
+                    Log.i("MovieViewModel", "Updated favorite for ${movie.title} to ${movie.isFavourite}")
                 }
             }else{
                 Log.e("MovieViewModel", "Movie with ID $movieId  not found in db.")
